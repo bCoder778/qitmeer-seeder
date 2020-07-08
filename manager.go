@@ -36,7 +36,7 @@ type Manager struct {
 
 const (
 	// defaultMaxAddresses is the maximum number of addresses to return.
-	defaultMaxAddresses = 16
+	defaultMaxAddresses = 128
 
 	// defaultStaleTimeout is the time in which a host is considered
 	// stale.
@@ -160,7 +160,7 @@ func (m *Manager) AddAddresses(addrs []net.IP) int {
 		node := Node{
 			IP:       addr,
 			LastSeen: time.Now(),
-			Services:protocol.Full,
+			Services: protocol.Full,
 		}
 		m.nodes[addrStr] = &node
 		count++
@@ -173,7 +173,7 @@ func (m *Manager) AddAddresses(addrs []net.IP) int {
 // Addresses returns IPs that need to be tested again.
 func (m *Manager) Addresses() []net.IP {
 	addrs := make([]net.IP, 0, defaultMaxAddresses*8)
-	now := time.Now()
+	//now := time.Now()
 	i := defaultMaxAddresses
 
 	m.mtx.RLock()
@@ -181,10 +181,10 @@ func (m *Manager) Addresses() []net.IP {
 		if i == 0 {
 			break
 		}
-		if (!node.LastSuccess.IsZero() && now.Sub(node.LastSuccess) < defaultStaleTimeout) ||
+		/*if (!node.LastSuccess.IsZero() && now.Sub(node.LastSuccess) < defaultStaleTimeout) ||
 			(!node.LastAttempt.IsZero() &&now.Sub(node.LastAttempt) < defaultStaleTimeout) {
 			continue
-		}
+		}*/
 		addrs = append(addrs, node.IP)
 		i--
 	}
